@@ -1,0 +1,7 @@
+Flask
+pytest
+phonenumbers
+nicegui
+python-dotenv
+SQLAlchemy
+Flask-SQLAlchemy
