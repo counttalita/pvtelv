@@ -1,33 +1,37 @@
-
-import { api } from './api';
+import { api, ApiResponse } from './api'; // Ensure ApiResponse is imported if used in return types directly
 import { notificationService } from './notification';
-import { captchaService } from './captcha';
+// import { captchaService } from './captcha'; // captchaService is removed as per plan
 
 export interface PhoneValidationResponse {
   isValid: boolean;
-  isVoip: boolean;
+  isVoip?: boolean; // Optional as per typical API responses
   carrier?: string;
   region?: string;
+  error?: string; // Added for error propagation
 }
 
 export interface OTPResponse {
   success: boolean;
-  expiresAt: string;
-  attempts: number;
-  requiresCaptcha: boolean;
+  message?: string; // Backend might send a message
+  expiresAt?: string; // Optional if not always present
+  attemptsRemaining?: number; // Backend might send this
+  lockoutUntil?: string; // Backend might send this
+  requiresCaptcha?: boolean; // Backend might send this
+  error?: string; // Added for error propagation
 }
 
 export interface VerificationResult {
   success: boolean;
   token?: string;
   error?: string;
+  userId?: string; // Optionally, backend might return userId
 }
 
 export interface DeviceInfo {
   type: string;
   browser: string;
   os: string;
-  ip?: string;
+  ip?: string; // Usually captured backend-side, but client can provide some
 }
 
 export interface AuditLog {
@@ -41,301 +45,282 @@ export interface AuditLog {
 }
 
 class AuthService {
-  private failedAttempts: Map<string, number> = new Map();
-  private MAX_ATTEMPTS = 5;
-  private LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
-  private lockedAccounts: Map<string, number> = new Map();
-  
+  // Client-side state for attempts/lockout REMOVED
+  // private failedAttempts: Map<string, number> = new Map();
+  // private MAX_ATTEMPTS = 5;
+  // private LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
+  // private lockedAccounts: Map<string, number> = new Map();
+
   private getDeviceInfo(): DeviceInfo {
+    // This is basic. More sophisticated fingerprinting can be done.
     return {
-      type: 'web',
-      browser: navigator.userAgent,
-      os: navigator.platform
+      type: 'web', // Could be 'mobile_web', 'desktop_web'
+      browser: navigator.userAgent, // General user agent string
+      os: navigator.platform,       // OS platform
+      // IP is best determined server-side, but some client-side info can be gathered.
     };
   }
 
   private async logAuditEvent(event: Partial<AuditLog>): Promise<void> {
     const auditLog: AuditLog = {
       eventType: event.eventType || 'unknown',
-      userId: event.userId,
+      userId: event.userId, // TODO: Populate with actual user ID from token/state post-login
       phoneNumber: event.phoneNumber,
       deviceInfo: event.deviceInfo || this.getDeviceInfo(),
       timestamp: new Date().toISOString(),
       status: event.status || 'success',
-      details: event.details
+      details: event.details,
     };
-    
-    console.log('AUDIT LOG:', auditLog);
-    
-    // In real implementation, send to backend
+
+    console.log('AUDIT LOG:', auditLog); // Keep client-side log for debugging
+
     try {
+      // Fire-and-forget for audit logs is often acceptable, but handle errors if crucial
       await api.post('/audit/log', auditLog);
     } catch (error) {
-      // Even if the API call fails, we've logged it locally
       console.error('Failed to send audit log:', error);
     }
   }
 
-  private isAccountLocked(phone: string): boolean {
-    const lockTime = this.lockedAccounts.get(phone);
-    if (lockTime && Date.now() < lockTime) {
-      return true;
-    } else if (lockTime) {
-      // Lockout period expired
-      this.lockedAccounts.delete(phone);
-      this.failedAttempts.delete(phone);
-    }
-    return false;
-  }
+  // isAccountLocked method REMOVED
 
   async validatePhone(phone: string): Promise<PhoneValidationResponse> {
     try {
       await this.logAuditEvent({
         eventType: 'phone_validation_attempt',
         phoneNumber: phone,
-        status: 'success'
+        status: 'success', // Log attempt, backend determines actual success
       });
-      
+
       const response = await api.post<PhoneValidationResponse>('/auth/validate-phone', {
         phone,
-        device: this.getDeviceInfo()
+        device: this.getDeviceInfo(),
       });
-      
-      // Mock response for MVP
-      return {
-        isValid: true,
-        isVoip: false,
-        carrier: 'Mock Carrier',
-        region: 'US'
-      };
-    } catch (error) {
+
+      if (response.data) {
+        return response.data; // Assumes backend returns PhoneValidationResponse structure
+      } else {
+        // Error from api.ts or unexpected structure
+        await this.logAuditEvent({
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: response.error || 'API error or invalid response structure',
+        });
+        return { 
+          isValid: false, 
+          error: response.error || 'Phone validation failed due to API error.' 
+        };
+      }
+    } catch (error) { // Catch errors from api.post itself (e.g. network)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during phone validation.';
       await this.logAuditEvent({
-        eventType: 'phone_validation_attempt',
+        eventType: 'phone_validation_failure',
         phoneNumber: phone,
         status: 'failure',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorMessage,
       });
-      
-      throw error;
+      return { isValid: false, error: errorMessage };
     }
   }
 
   async requestOTP(phone: string, isLogin: boolean = false): Promise<OTPResponse> {
+    // Client-side lockout logic REMOVED
+    // Client-side CAPTCHA trigger logic REMOVED
+    
+    const eventType = isLogin ? 'login_otp_request' : 'registration_otp_request';
     try {
-      if (this.isAccountLocked(phone)) {
-        const remainingTime = Math.ceil(
-          (this.lockedAccounts.get(phone)! - Date.now()) / 60000
-        );
-        
-        await this.logAuditEvent({
-          eventType: 'otp_request_blocked',
-          phoneNumber: phone,
-          status: 'failure',
-          details: `Account locked for ${remainingTime} more minutes`
-        });
-        
-        return {
-          success: false,
-          expiresAt: new Date().toISOString(),
-          attempts: this.failedAttempts.get(phone) || 0,
-          requiresCaptcha: true
-        };
-      }
-      
-      const attempts = this.failedAttempts.get(phone) || 0;
-      const requiresCaptcha = await captchaService.shouldShowCaptcha(
-        undefined, undefined, attempts
-      );
-      
       await this.logAuditEvent({
-        eventType: isLogin ? 'login_otp_request' : 'registration_otp_request',
+        eventType: eventType,
         phoneNumber: phone,
-        status: 'success'
+        status: 'success', // Log attempt
       });
-      
+
       const response = await api.post<OTPResponse>('/auth/request-otp', {
         phone,
         purpose: isLogin ? 'login' : 'registration',
-        device: this.getDeviceInfo()
+        device: this.getDeviceInfo(),
       });
-      
-      // Mock response for MVP
-      return {
-        success: true,
-        expiresAt: new Date(Date.now() + 5 * 60000).toISOString(), // 5 minutes
-        attempts,
-        requiresCaptcha
-      };
+
+      if (response.data && response.data.success) {
+        return response.data; // Backend now controls attempts, lockout, captcha info
+      } else {
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        await this.logAuditEvent({
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        return { success: false, error: errorDetail, ...response.data }; // Spread data in case it has attempts/lockout info
+      }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during OTP request.';
       await this.logAuditEvent({
-        eventType: isLogin ? 'login_otp_request' : 'registration_otp_request',
+        eventType: eventType + '_failure',
         phoneNumber: phone,
         status: 'failure',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorMessage,
       });
-      
-      throw error;
+      return { success: false, error: errorMessage };
     }
   }
 
   async verifyOTP(phone: string, otp: string): Promise<VerificationResult> {
+    // Client-side lockout logic REMOVED
+    
     try {
-      if (this.isAccountLocked(phone)) {
-        const remainingTime = Math.ceil(
-          (this.lockedAccounts.get(phone)! - Date.now()) / 60000
-        );
-        
-        await this.logAuditEvent({
-          eventType: 'otp_verification_blocked',
-          phoneNumber: phone,
-          status: 'failure',
-          details: `Account locked for ${remainingTime} more minutes`
-        });
-        
-        return { 
-          success: false, 
-          error: `Account locked. Try again in ${remainingTime} minutes.`
-        };
-      }
-      
       const response = await api.post<VerificationResult>('/auth/verify-otp', {
         phone,
         otp,
-        device: this.getDeviceInfo()
+        device: this.getDeviceInfo(),
       });
-      
-      // Mock successful verification
-      if (otp === '123456') {
-        const token = 'mock_jwt_token_' + Date.now();
+
+      if (response.data && response.data.success && response.data.token) {
         localStorage.setItem('pvtelv_auth', 'true');
-        localStorage.setItem('pvtelv_token', token);
+        localStorage.setItem('pvtelv_token', response.data.token);
         
-        // Reset failed attempts
-        this.failedAttempts.delete(phone);
-        
+        // Client-side failed attempts tracking REMOVED
+
         await this.logAuditEvent({
           eventType: 'otp_verification_success',
           phoneNumber: phone,
-          status: 'success'
+          userId: response.data.userId, // Assuming backend might return userId in token or response
+          status: 'success',
         });
-        
-        // Send welcome notification for new users
-        const isNewUser = !localStorage.getItem('pvtelv_welcomed');
+
+        // Welcome notification logic can remain for now, but ideally backend driven
+        // Or triggered by a specific "isNewUser" flag from backend post-verification
+        const isNewUser = !localStorage.getItem('pvtelv_welcomed'); // This is a crude way to check new user
         if (isNewUser) {
           localStorage.setItem('pvtelv_welcomed', 'true');
-          await notificationService.sendWelcomeNotification('user123', phone);
+          // Assuming notificationService.sendWelcomeNotification doesn't need actual user ID immediately
+          // or userId can be fetched from token later by the component calling this.
+          await notificationService.sendWelcomeNotification(response.data.userId || 'unknown_user', phone);
         }
         
-        return { success: true, token };
-      }
-      
-      // Handle failed attempt
-      const attempts = (this.failedAttempts.get(phone) || 0) + 1;
-      this.failedAttempts.set(phone, attempts);
-      
-      await this.logAuditEvent({
-        eventType: 'otp_verification_failure',
-        phoneNumber: phone,
-        status: 'failure',
-        details: `Failed attempt ${attempts} of ${this.MAX_ATTEMPTS}`
-      });
-      
-      // Check if account should be locked
-      if (attempts >= this.MAX_ATTEMPTS) {
-        const lockUntil = Date.now() + this.LOCKOUT_TIME;
-        this.lockedAccounts.set(phone, lockUntil);
-        
+        return { success: true, token: response.data.token, userId: response.data.userId };
+      } else {
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
         await this.logAuditEvent({
-          eventType: 'account_locked',
+          eventType: 'otp_verification_failure',
           phoneNumber: phone,
           status: 'failure',
-          details: `Account locked until ${new Date(lockUntil).toISOString()}`
+          details: errorDetail,
         });
-        
-        return { 
-          success: false, 
-          error: `Too many failed attempts. Account locked for 15 minutes.`
-        };
+        return { success: false, error: errorDetail };
       }
-      
-      return { 
-        success: false, 
-        error: `Invalid OTP. ${this.MAX_ATTEMPTS - attempts} attempts remaining.`
-      };
-    } catch (error) {
+    } catch (error) { // Catch errors from api.post itself
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during OTP verification.';
       await this.logAuditEvent({
         eventType: 'otp_verification_error',
         phoneNumber: phone,
         status: 'failure',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorMessage,
       });
-      
-      throw error;
+      return { success: false, error: errorMessage };
     }
   }
 
   async logout(sessionId?: string): Promise<boolean> {
+    const userIdFromToken = this.getUserIdFromToken(); // Helper to get user ID
     try {
+      // Revoke current session on backend and clear local storage
+      // Or if sessionId is provided, backend revokes that specific session
+      const endpoint = sessionId ? `/auth/revoke-session/${sessionId}` : '/auth/logout';
+      const payload = sessionId ? {} : {device: this.getDeviceInfo()}; // Logout might need current session info
+
+      await api.post(endpoint, payload); // Assuming POST, adjust if different
+
+      localStorage.removeItem('pvtelv_auth');
+      localStorage.removeItem('pvtelv_token');
+      localStorage.removeItem('pvtelv_welcomed'); // Clear welcome flag on logout too
+      
       await this.logAuditEvent({
         eventType: 'logout',
-        userId: 'user123', // In a real app, get from token
-        status: 'success'
+        userId: userIdFromToken, // TODO: Get from token
+        status: 'success',
       });
-      
-      if (sessionId) {
-        // Revoke specific session
-        await api.post('/auth/revoke-session', { sessionId });
-      } else {
-        // Revoke current session
-        localStorage.removeItem('pvtelv_auth');
-        localStorage.removeItem('pvtelv_token');
-      }
       return true;
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during logout.';
       await this.logAuditEvent({
         eventType: 'logout_error',
-        userId: 'user123', // In a real app, get from token
+        userId: userIdFromToken, // TODO: Get from token
         status: 'failure',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorMessage,
       });
-      
-      throw error;
+      // Even if backend call fails, attempt to clear local session for UX
+      localStorage.removeItem('pvtelv_auth');
+      localStorage.removeItem('pvtelv_token');
+      localStorage.removeItem('pvtelv_welcomed');
+      // Propagate error so UI can react if needed
+      // throw new Error(errorMessage); // Or return false
+      return false; 
     }
   }
 
   async revokeAllOtherSessions(): Promise<boolean> {
+    const userIdFromToken = this.getUserIdFromToken();
     try {
-      await api.post('/auth/revoke-all-sessions', {
-        exceptCurrent: true
-      });
+      // Backend should handle revoking all sessions for the authenticated user except the current one.
+      // The current session can be identified by the JWT token passed in the Authorization header.
+      const response = await api.post('/auth/revoke-all-sessions', {}); // No body needed, uses token
       
-      await this.logAuditEvent({
-        eventType: 'revoke_all_sessions',
-        userId: 'user123', // In a real app, get from token
-        status: 'success'
-      });
-      
-      return true;
+      if (response.data) { // Assuming backend confirms with a success message or data
+        await this.logAuditEvent({
+          eventType: 'revoke_all_sessions',
+          userId: userIdFromToken, // TODO: Get from token
+          status: 'success',
+        });
+        return true;
+      } else {
+        const errorDetail = response.error || 'Failed to revoke other sessions.';
+         await this.logAuditEvent({
+          eventType: 'revoke_all_sessions_error',
+          userId: userIdFromToken, // TODO: Get from token
+          status: 'failure',
+          details: errorDetail,
+        });
+        return false;
+      }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during session revocation.';
       await this.logAuditEvent({
         eventType: 'revoke_all_sessions_error',
-        userId: 'user123', // In a real app, get from token
+        userId: userIdFromToken, // TODO: Get from token
         status: 'failure',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: errorMessage,
       });
-      
-      throw error;
+      return false;
     }
   }
 
-  // Helper to check if user is authenticated
   isAuthenticated(): boolean {
-    return localStorage.getItem('pvtelv_auth') === 'true';
+    const token = this.getToken();
+    // Basic check: token exists. Could add token expiry check here if not done by API calls.
+    return !!token; 
   }
 
-  // Get current auth token
   getToken(): string | null {
     return localStorage.getItem('pvtelv_token');
+  }
+
+  // Placeholder for a helper that would parse JWT to get user ID
+  // In a real app, use a library like jwt-decode
+  private getUserIdFromToken(): string | undefined {
+    const token = this.getToken();
+    if (token) {
+      try {
+        // const decoded: { sub?: string, userId?: string, id?: string } = jwt_decode(token); // Example
+        // return decoded.sub || decoded.userId || decoded.id;
+        return "user_from_token_placeholder"; // Replace with actual token parsing
+      } catch (e) {
+        console.error("Failed to decode token:", e);
+        return undefined;
+      }
+    }
+    return undefined;
   }
 }
 

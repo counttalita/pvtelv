@@ -1,18 +1,78 @@
 
-import React from "react";
+import React, { useState } from "react"; // Added useState
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SecurityStatus, DefaultSecurityItems } from "@/components/dashboard/SecurityStatus";
 import { KYCStatus } from "@/components/kyc/KYCStatus";
-import { ArrowRight, CreditCard, Activity, Bell } from "lucide-react";
+import { ArrowRight, CreditCard, Activity, Bell, AlertCircle } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { walletApiService } from "@/services/walletApiService";
+import { WalletDetails, KYCStatusData, KYCStatusVal, PaginatedTransactions, TransactionItem } from "@/types/apiData"; // Added Transaction types
+import { ApiResponse } from "@/services/api";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"; // Added Table components
 
 const Dashboard = () => {
   const securityItems = DefaultSecurityItems();
+  const [currentPage, setCurrentPage] = useState(1);
+  const transactionsPerPage = 10;
   
   const handleSetupSecurityItem = (id: string) => {
     console.log("Setting up security item:", id);
     // In a real app, this would navigate to the setup page for the specific security item
+  };
+
+  // Fetch Wallet Details
+  const { 
+    data: walletApiResponse, 
+    isLoading: isLoadingWallet, 
+    isError: isErrorWallet, 
+    error: errorWallet 
+  } = useQuery<ApiResponse<WalletDetails>, Error>({
+    queryKey: ['walletDetails'], 
+    queryFn: walletApiService.getWalletDetails 
+  });
+  const walletDetails = walletApiResponse?.data;
+
+  // Fetch KYC Status
+  const { 
+    data: kycApiResponse, 
+    isLoading: isLoadingKYC, 
+    isError: isErrorKYC, 
+    error: errorKYC 
+  } = useQuery<ApiResponse<KYCStatusData>, Error>({
+    queryKey: ['kycStatus'], 
+    queryFn: walletApiService.getKYCStatus
+  });
+  const kycData = kycApiResponse?.data;
+
+  // Fetch Transactions
+  const { 
+    data: transactionsApiResponse, 
+    isLoading: isLoadingTransactions, 
+    isError: isErrorTransactions, 
+    error: errorTransactions 
+  } = useQuery<ApiResponse<PaginatedTransactions>, Error>({
+    queryKey: ['transactions', currentPage, transactionsPerPage], 
+    queryFn: () => walletApiService.getTransactions(currentPage, transactionsPerPage),
+    keepPreviousData: true 
+  });
+  const paginatedTransactions = transactionsApiResponse?.data;
+
+  const getAccountStatusText = (status?: KYCStatusVal) => {
+    if (!status) return "Loading...";
+    switch (status) {
+      case "approved":
+        return "Account Verified";
+      case "pending_manual":
+        return "Verification Pending";
+      case "rejected":
+        return "Verification Rejected";
+      case "not_started":
+      default:
+        return "Verification Needed";
+    }
   };
   
   return (
@@ -52,10 +112,20 @@ const Dashboard = () => {
                 <CreditCard className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">$0.00</div>
-                <p className="text-xs text-muted-foreground">
-                  Add funds to start using your wallet
-                </p>
+                {isLoadingWallet ? (
+                  <Skeleton className="h-8 w-3/4 my-1" />
+                ) : isErrorWallet ? (
+                  <div className="flex items-center text-sm text-red-500">
+                    <AlertCircle className="mr-1 h-4 w-4" /> Error: {errorWallet?.message || 'Failed to load balance'}
+                  </div>
+                ) : walletDetails ? (
+                  <>
+                    <div className="text-2xl font-bold">ZAR {parseFloat(walletDetails.balance).toFixed(2)}</div>
+                    <p className="text-xs text-muted-foreground">
+                      {parseFloat(walletDetails.balance) > 0 ? "Available funds" : "Add funds to start using your wallet"}
+                    </p>
+                  </>
+                ) : null}
               </CardContent>
             </Card>
             
@@ -67,18 +137,36 @@ const Dashboard = () => {
                 <Activity className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-lg font-medium text-amber-500">Verification Needed</div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Complete KYC to unlock full features
-                </p>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="mt-2 text-xs"
-                  onClick={() => console.log("Navigate to KYC")}
-                >
-                  Complete Verification
-                </Button>
+                {isLoadingKYC ? (
+                  <>
+                    <Skeleton className="h-6 w-1/2 my-1" />
+                    <Skeleton className="h-4 w-3/4 mt-1" />
+                    <Skeleton className="h-8 w-2/5 mt-2" />
+                  </>
+                ) : isErrorKYC ? (
+                  <div className="flex items-center text-sm text-red-500">
+                     <AlertCircle className="mr-1 h-4 w-4" /> Error: {errorKYC?.message || 'Failed to load KYC status'}
+                  </div>
+                ) : kycData ? (
+                  <>
+                    <div className={`text-lg font-medium ${kycData.status === 'approved' ? 'text-green-500' : 'text-amber-500'}`}>
+                      {getAccountStatusText(kycData.status)}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {kycData.status === 'approved' ? 'Your account is fully verified.' : 'Complete KYC to unlock full features.'}
+                    </p>
+                    {kycData.status !== 'approved' && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="mt-2 text-xs"
+                        onClick={() => console.log("Navigate to KYC page")} // Replace with actual navigation
+                      >
+                        {kycData.status === 'rejected' ? 'Re-submit KYC' : 'Complete Verification'}
+                      </Button>
+                    )}
+                  </>
+                ) : null}
               </CardContent>
             </Card>
             
@@ -100,7 +188,19 @@ const Dashboard = () => {
           
           {/* Second Row */}
           <div className="grid gap-4 md:grid-cols-2">
-            <KYCStatus status="not_started" />
+            {isLoadingKYC ? (
+              <Skeleton className="h-40 w-full" /> // Approximate KYCStatus component height
+            ) : isErrorKYC ? (
+               <Card><CardHeader><CardTitle>KYC Status</CardTitle></CardHeader><CardContent><p className="text-sm text-red-500">Error loading KYC information.</p></CardContent></Card>
+            ) : kycData ? (
+              <KYCStatus 
+                status={kycData.status} 
+                submittedAt={kycData.submitted_at} 
+                rejectionReason={kycData.notes || kycData.result} 
+              />
+            ) : (
+              <KYCStatus status="not_started" /> // Default or placeholder if no data and not loading/error
+            )}
             <SecurityStatus items={securityItems} onSetupItem={handleSetupSecurityItem} />
           </div>
         </TabsContent>
@@ -114,9 +214,67 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-center p-8 text-muted-foreground">
-                <p>No transactions yet</p>
-              </div>
+              {isLoadingTransactions ? (
+                <div className="space-y-2">
+                  {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+                </div>
+              ) : isErrorTransactions ? (
+                <div className="flex items-center justify-center p-8 text-red-500">
+                  <AlertCircle className="mr-2 h-5 w-5" /> 
+                  <p>Error loading transactions: {errorTransactions?.message || "Unknown error"}</p>
+                </div>
+              ) : paginatedTransactions && paginatedTransactions.transactions.length > 0 ? (
+                <>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Description</TableHead>
+                        <TableHead className="text-right">Amount</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedTransactions.transactions.map((tx: TransactionItem) => (
+                        <TableRow key={tx.id}>
+                          <TableCell>{new Date(tx.timestamp).toLocaleDateString()}</TableCell>
+                          <TableCell className="capitalize">{tx.type}</TableCell>
+                          <TableCell>{tx.description || '-'}</TableCell>
+                          <TableCell className="text-right">
+                            {tx.type === 'deposit' || tx.type === 'withdrawal_reversal' ? '+' : '-'}
+                            {parseFloat(tx.amount).toFixed(2)} {tx.currency}
+                          </TableCell>
+                          <TableCell className="capitalize">{tx.status}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div className="flex items-center justify-between mt-4">
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+                      disabled={currentPage <= 1 || isLoadingTransactions}
+                    >
+                      Previous
+                    </Button>
+                    <span className="text-sm text-muted-foreground">
+                      Page {paginatedTransactions?.page || 1} of {paginatedTransactions?.total_pages || 1}
+                    </span>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setCurrentPage(prev => prev + 1)} 
+                      disabled={(paginatedTransactions && currentPage >= paginatedTransactions.total_pages) || isLoadingTransactions}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex items-center justify-center p-8 text-muted-foreground">
+                  <p>No transactions yet</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

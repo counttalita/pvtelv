@@ -6,13 +6,11 @@ import { CreditCard } from "lucide-react";
 import { authService } from "@/services/auth";
 import { PhoneInput } from "@/components/auth/PhoneInput";
 import { OTPVerification } from "@/components/auth/OTPVerification";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// Removed Button, Input, Label as they are no longer used after password form removal
 
 const Auth = () => {
   const navigate = useNavigate();
-  const [authStep, setAuthStep] = useState<"phone" | "otp" | "password">("phone");
+  const [authStep, setAuthStep] = useState<"phone" | "otp">("phone"); // Removed "password"
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,8 +51,8 @@ const Auth = () => {
     try {
       const result = await authService.verifyOTP(phoneNumber, otp);
       
-      if (result.success) {
-        setAuthStep("password");
+      if (result.success) { // authService already stored the token
+        navigate("/dashboard");
       } else {
         setError(result.error || "Invalid verification code");
       }
@@ -81,15 +79,7 @@ const Auth = () => {
     }
   };
   
-  const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // In MVP, we just redirect to dashboard after password creation
-    setTimeout(() => {
-      navigate("/dashboard");
-    }, 1000);
-  };
+  // handlePasswordSubmit function REMOVED
 
   const renderAuthStep = () => {
     switch (authStep) {
@@ -104,38 +94,7 @@ const Auth = () => {
             isLoading={isLoading}
           />
         );
-      case "password":
-        return (
-          <form onSubmit={handlePasswordSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="password">Create Password</Label>
-              <Input
-                id="password"
-                type="password"
-                required
-                minLength={8}
-              />
-              <p className="text-xs text-muted-foreground">
-                Password must be at least 8 characters long
-              </p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirm Password</Label>
-              <Input
-                id="confirm-password"
-                type="password"
-                required
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-wallet-primary hover:bg-wallet-accent"
-            >
-              {isLoading ? "Creating Account..." : "Create Account"}
-            </Button>
-          </form>
-        );
+      // case "password" block REMOVED
     }
   };
   
