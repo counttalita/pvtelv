@@ -9,10 +9,10 @@ This document tracks the implementation of all registration and login flows, sec
 - [x] Disposable/VoIP check
 - [x] Carrier/region restriction
 - [x] Duplicate account check
-- [x] OTP generation (mock Twilio), hash, expiry, limit
+- [x] OTP generation (Twilio integration is MOCKED), hash, expiry, limit
 - [x] Device/network fingerprinting
 - [x] Suspicious IP/device detection
-- [x] CAPTCHA after repeated failures (stub)
+- [x] CAPTCHA after repeated failures (CAPTCHA threshold logging implemented; full CAPTCHA deferred).
 - [x] Audit logging for registration events
 
 ### 2. Phone Verification
@@ -20,16 +20,14 @@ This document tracks the implementation of all registration and login flows, sec
 - [x] Mark phone_verified
 - [x] Exponential backoff
 - [x] Profile creation & risk
-- [x] Welcome notification/onboarding
-- [ ] Welcome notification/onboarding
+- [x] Welcome notification/onboarding (in-app, SMS; user emails removed from this flow).
 
 ---
 
 
 ### 3. Additional Security
-- [ ] IP/device validation
-- [ ] CAPTCHA after failures
-- [ ] Audit logging
+- [~] IP/device validation (basic in-memory tracking implemented, further enhancements can be future work)
+- [x] CAPTCHA after repeated failures (CAPTCHA threshold logging implemented; full CAPTCHA deferred).
 
 ## Login Flow
 
@@ -59,16 +57,31 @@ This document tracks the implementation of all registration and login flows, sec
 
 ---
 
-### Next Major Step
+### Implemented Wallet Management Features
 - [x] Implement robust KYC (Know Your Customer) process after login and before profile/welcome.
 - [x] Profile creation and onboarding logic (after KYC)
-    - [x] Welcome notification (in-app, email/SMS via Twilio)
+    - [x] Welcome notification (in-app, SMS; user emails removed from this flow).
     - [x] Intro tour step
     - [x] Security setup step
-- [ ] Wallet/account setup (after onboarding)
+- [x] **Implement Wallet Management Features**
+    - [x] Wallet Model & Core Logic (balance, user association)
+    - [x] Transaction Model & Logging (deposits, withdrawals, fees)
+    - [x] PayPal Integration for Deposits (Top-Up with 15% fee)
+    - [x] Withdrawal Functionality (Bank & PayPal, with 15% fee)
+    - [x] Linked Account Management (Bank & PayPal, max 2)
 
 **Legend:**
 - [x] Complete
 - [ ] Incomplete
+- [~] Partially Complete / Basic Implementation
+
+---
+
+### Future Considerations / Deferred Items
+- Full CAPTCHA implementation with a visual challenge.
+- Live Twilio integration for OTP SMS.
+- Implementation of actual email sending for admin notifications (e.g., via SendGrid/SMTP for KYC alerts, bank withdrawal processing).
+- Advanced account recovery mechanisms.
+- Production-grade IP/device tracking and rate limiting (e.g., using Redis/DB instead of in-memory stores).
 
 ---

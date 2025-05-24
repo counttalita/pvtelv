@@ -14,61 +14,63 @@ PATELA is a modern digital wallet enabling secure deposits and withdrawals via P
 ## Key Features
 
 ### User Authentication
-- Phone-based registration and login with OTP (rate-limited, lockouts, expiry)
-- Email verification and multi-factor onboarding
-- Device and network fingerprinting for risk analysis
-- Comprehensive audit logging and brute-force protection
+- Phone-based registration and login with OTP (rate-limited, lockouts, expiry).
+- Primarily phone-based registration and login with OTP. Email is not actively used for user account verification or primary user communication.
+- Device and network fingerprinting for risk analysis.
+- Comprehensive audit logging and brute-force protection.
 
 ### Wallet Management
-- Real-time wallet balance and transaction history
-- Top-up (deposit) via PayPal with dynamic fee calculation
-- Withdrawals to bank or PayPal with manual/automated processing
-- Linked bank account management (up to 2 per user)
+- Real-time wallet balance and transaction history.
+- Top-up (deposit) via PayPal: User pays gross, 15% fee deducted, net amount credited to wallet.
+- Withdrawals:
+    - To Bank: Manual processing by admin.
+    - To PayPal: Automated API-based payout.
+- Linked bank account management (up to 2 per user).
 
 ### Security
-- Strong validation for phone, email, and payment details
-- Rate limiting, CAPTCHA, and anomaly detection for suspicious activity
-- Session management with sliding expiry and multi-device support
+- Strong validation for phone and payment details. Email is not collected from users during registration.
+- Rate limiting, CAPTCHA threshold logging (no blocking CAPTCHA), and anomaly detection for suspicious activity.
+- Session management with sliding expiry and multi-device support.
 
 ### Notifications
-- Email and SMS alerts for transactions and account changes
-- Admin notifications for manual withdrawal processing
+- SMS alerts for transactions and account changes. Email notifications are primarily for administrative purposes.
+- Admin notifications for manual withdrawal processing.
 
 ---
 
 ## Core Flows
 
 ### Registration
-1. **Phone Validation:** E.164 format, carrier checks, duplicate prevention
-2. **OTP Verification:** 6-digit code via Twilio, 3 attempts, 5 min expiry, lockout on abuse
-3. **Profile Creation:** Risk scoring, welcome notification, onboarding instructions
-4. **Email Verification:** Token-based, 24h expiry, increases verification level
+1. **Phone Validation:** E.164 format, carrier checks, duplicate prevention.
+2. **OTP Verification:** 6-digit code (mock Twilio), configured attempts, expiry, and lockout on abuse.
+3. **Profile Creation:** Basic profile setup, welcome notification (in-app/SMS), onboarding instructions.
 
 ### Login
-1. **Phone & Account Status:** Only verified, active accounts allowed
+1. **Phone & Account Status:** Only verified, active accounts allowed.
 2. **OTP Login:** Secure, rate-limited, session token generation
 3. **Session Management:** 24h sliding expiry, multi-device, user-controlled session revocation
 
 ### Recovery
-- **Phone:** Email verification required, cooling-off period, notify previous number
-- **Email:** OTP + reset token, notify linked phone, lock sensitive actions
+- Account recovery is primarily managed via phone number and OTP. Specific recovery scenarios beyond standard OTP login are subject to further development.
 
 ### Top-Up (PayPal)
-1. User enters amount (R50–R25,000), system calculates fees
-2. PayPal payment link generated, transaction marked pending
-3. On success: update balance (minus 15% fee), notify user
+1. User enters amount (ZAR 50.00 – ZAR 25,000.00).
+2. PayPal payment link generated, internal transaction marked 'pending'.
+3. On successful PayPal payment confirmation (via redirect or webhook):
+    - User's wallet balance is credited with the top-up amount minus a 15% fee.
+    - User is notified (in-app/SMS).
 
 ### Withdrawal
-- **Bank:** Validate balance, 15% fee, admin notified for manual processing
-- **PayPal:** Validate, deduct fees, initiate payout, notify user
+- **Bank:** User requests withdrawal. System validates balance, deducts gross amount (including a 15% fee). Admin is notified for manual processing of the net amount.
+- **PayPal:** User requests withdrawal. System validates balance, deducts gross amount. A 15% fee is applied, and the net amount is sent to the user's PayPal account via API. User is notified.
 
 ---
 
 ## Technology Stack
 
-- **Backend:** Python, Flask, Appwrite, Twilio, PayPal SDK
-- **Frontend:** React 18, Vite, TypeScript, shadcn-ui, Tailwind CSS, React Router, Zod
-- **Other:** Email/SMS (Twilio), device fingerprinting, robust logging
+- **Backend:** Python, Flask, SQLAlchemy, Twilio (mocked for OTP), PayPal SDK (`paypalrestsdk`).
+- **Frontend:** React 18, Vite, TypeScript, shadcn-ui, Tailwind CSS, React Router, Zod.
+- **Other:** SMS (via Twilio - mocked), device fingerprinting, robust logging.
 
 ---
 
