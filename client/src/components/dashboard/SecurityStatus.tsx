@@ -84,22 +84,19 @@ export function SecurityStatus({ items, onSetupItem }: SecurityStatusProps) {
 export function DefaultSecurityItems() {
   return [
     {
-      id: "2fa",
-      title: "Two-Factor Authentication",
-      completed: false,
-      icon: <Smartphone className="h-4 w-4 text-wallet-primary" />,
+      id: "otp_login_active", // Changed ID for clarity
+      title: "Phone OTP Login Active", // Renamed for clarity
+      completed: true, // Assuming if user is in dashboard, OTP was successful
+      icon: <Smartphone className="h-4 w-4 text-wallet-success" />, // Updated icon color to reflect completion
     },
-    {
-      id: "email_verification",
-      title: "Verify Email Address",
-      completed: false,
-      icon: <Mail className="h-4 w-4 text-wallet-primary" />,
-    },
-    {
-      id: "secure_password",
-      title: "Set Secure Password",
-      completed: true,
-      icon: <Lock className="h-4 w-4 text-wallet-success" />,
-    },
+    // Removed "Verify Email Address"
+    // Removed "Set Secure Password"
+    // Example for future:
+    // {
+    //   id: "session_review",
+    //   title: "Review Active Sessions",
+    //   completed: false, 
+    //   icon: <ListChecks className="h-4 w-4 text-wallet-primary" />, // Would need ListChecks import
+    // }
   ];
 }

@@ -35,13 +35,19 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
     if (!response.ok) {
       let errorMsg = response.statusText;
+      let errorData: any = null; // To store parsed error data if available
       try {
-        const errorData = await response.json();
+        // Attempt to parse error response as JSON
+        const potentialErrorData = await response.json();
+        errorData = potentialErrorData; // Store it if parsing succeeds
         errorMsg = errorData.error || errorData.message || errorMsg;
       } catch (e) {
-        // Response was not JSON, use statusText
+        // Response was not JSON, or errorData did not have expected fields.
+        // errorMsg remains response.statusText
       }
-      console.error(`API Error: ${response.status} ${errorMsg} on ${endpoint}`);
+      // Enhanced console.error
+      const errorToLog = errorData?.error || errorData?.message || `Request failed with status ${response.status}`;
+      console.error(`API Error: ${options.method || 'GET'} ${BASE_URL}${endpoint} - Status: ${response.status}, Message: ${errorToLog}`, errorData || {}); // Log errorData if available
       return { error: errorMsg, status: response.status };
     }
 

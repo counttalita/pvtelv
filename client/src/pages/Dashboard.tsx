@@ -230,7 +230,7 @@ const Dashboard = () => {
                       <TableRow>
                         <TableHead>Date</TableHead>
                         <TableHead>Type</TableHead>
-                        <TableHead>Description</TableHead>
+                        <TableHead className="hidden sm:table-cell">Description</TableHead>
                         <TableHead className="text-right">Amount</TableHead>
                         <TableHead>Status</TableHead>
                       </TableRow>
@@ -240,7 +240,9 @@ const Dashboard = () => {
                         <TableRow key={tx.id}>
                           <TableCell>{new Date(tx.timestamp).toLocaleDateString()}</TableCell>
                           <TableCell className="capitalize">{tx.type}</TableCell>
-                          <TableCell>{tx.description || '-'}</TableCell>
+                          <TableCell className="hidden sm:table-cell max-w-[150px] md:max-w-[250px] truncate">
+                            {tx.description || '-'}
+                          </TableCell>
                           <TableCell className="text-right">
                             {tx.type === 'deposit' || tx.type === 'withdrawal_reversal' ? '+' : '-'}
                             {parseFloat(tx.amount).toFixed(2)} {tx.currency}

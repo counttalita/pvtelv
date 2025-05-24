@@ -1,73 +1,61 @@
-# Welcome to your Lovable project
+# PVTElA Digital Wallet - Frontend Client
 
-## Project info
+This is the frontend client for the PVTElA Digital Wallet application. It provides the user interface for interacting with the PVTElA backend services.
 
-**URL**: https://lovable.dev/projects/f696967b-b2a3-4f3b-9022-35a2ead126f7
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/f696967b-b2a3-4f3b-9022-35a2ead126f7) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
+## Key Technologies
 
 This project is built with:
-
 - Vite
 - TypeScript
 - React
-- shadcn-ui
-- Tailwind CSS
+- React Router DOM (`react-router-dom`) for routing
+- TanStack Query (`@tanstack/react-query`) for server state management
+- shadcn/ui (UI components)
+- Tailwind CSS (utility-first CSS framework)
+- ESLint with TypeScript ESLint & React plugins for code quality
+- Vitest (for unit/integration tests)
 
-## How can I deploy this project?
+## Project Structure Overview
 
-Simply open [Lovable](https://lovable.dev/projects/f696967b-b2a3-4f3b-9022-35a2ead126f7) and click on Share -> Publish.
+The client-side code is organized as follows within the `src/` directory:
+- `pages/`: Top-level components representing different pages/views.
+- `components/`: Reusable UI components, including feature-specific (e.g., `auth/`, `dashboard/`) and general UI elements (from `ui/`).
+- `services/`: Modules responsible for external interactions, primarily API calls (`api.ts`, `auth.ts`, `walletApiService.ts`).
+- `hooks/`: Custom React hooks for reusable component logic.
+- `types/`: TypeScript type definitions, especially for API data structures (`apiData.ts`).
+- `lib/`: Utility functions.
+- `App.tsx`: Root application component, sets up routing and global providers.
+- `main.tsx`: Main entry point of the application.
 
-## Can I connect a custom domain to my Lovable project?
+## Key Architectural Decisions & Features
 
-Yes, you can!
+- **API Communication:** A central API service (`src/services/api.ts`) handles all HTTP requests to the backend. It includes logic for adding authentication tokens to headers and standardized error handling from responses.
+- **Authentication:** User authentication is phone/OTP-based, managed by `src/services/auth.ts`. Session tokens obtained from the backend are stored in `localStorage`. Protected routes are enforced using a higher-order component pattern.
+- **State Management:** Server state (data fetching, caching, background updates) is managed by `@tanstack/react-query`. Local component state is handled using React's built-in hooks (`useState`, `useReducer`, etc.).
+- **UI & Responsiveness:** The UI is built with shadcn/ui components and styled with Tailwind CSS, aiming for a consistent and responsive design across various screen sizes. Responsive utility classes are used to adapt layouts.
+- **Error Handling:** Global error handling for React component rendering errors is provided by an `ErrorBoundary` component (`src/components/layout/ErrorBoundary.tsx`). API call errors are logged via the central API service.
+- **Code Quality:** ESLint is configured with rules for TypeScript and React, including `@typescript-eslint/no-unused-vars` (configured to allow underscore-prefixed exceptions) to maintain code hygiene.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Setup & Development
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1.  Navigate to the `client` directory:
+    ```sh
+    cd client
+    ```
+2.  Install dependencies:
+    ```sh
+    npm i
+    ```
+3.  Start the development server (usually on `http://localhost:5173` or similar):
+    ```sh
+    npm run dev
+    ```
+
+## Testing
+
+Basic unit and integration tests for services like `api.ts` are implemented using Vitest. To run tests (if a test script is configured in `package.json`):
+```sh
+# (Assuming 'npm test' or 'npm run test:unit' is configured)
+# npm test 
+```
+*(If no specific test script is known, this part can be omitted or made more generic).*

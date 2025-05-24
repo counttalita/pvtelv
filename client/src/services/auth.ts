@@ -107,6 +107,267 @@ class AuthService {
           status: 'failure',
           details: response.error || 'API error or invalid response structure',
         });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        // Error from api.ts or unexpected structure
+        const errorDetail = response.error || 'API error or invalid response structure for validatePhone';
+        console.error(`AuthService.validatePhone Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'phone_validation_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
         return { 
           isValid: false, 
           error: response.error || 'Phone validation failed due to API error.' 
@@ -147,6 +408,238 @@ class AuthService {
       } else {
         const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
         await this.logAuditEvent({
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: eventType + '_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'Failed to request OTP.';
+        console.error(`AuthService.requestOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
           eventType: eventType + '_failure',
           phoneNumber: phone,
           status: 'failure',
@@ -208,6 +701,238 @@ class AuthService {
           status: 'failure',
           details: errorDetail,
         });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
+        const errorDetail = response.error || response.data?.error || 'OTP verification failed.';
+        console.error(`AuthService.verifyOTP Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({ // logAuditEvent is already present and good
+          eventType: 'otp_verification_failure',
+          phoneNumber: phone,
+          status: 'failure',
+          details: errorDetail,
+        });
         return { success: false, error: errorDetail };
       }
     } catch (error) { // Catch errors from api.post itself
@@ -254,8 +979,39 @@ class AuthService {
       localStorage.removeItem('pvtelv_auth');
       localStorage.removeItem('pvtelv_token');
       localStorage.removeItem('pvtelv_welcomed');
-      // Propagate error so UI can react if needed
-      // throw new Error(errorMessage); // Or return false
+      const apiResponse = await api.post(endpoint, payload); // Changed to capture response
+      if (apiResponse.error) { 
+        console.error(`AuthService.logout API Error: ${apiResponse.error}`, apiResponse); 
+        await this.logAuditEvent({ eventType: 'logout_api_error', userId: userIdFromToken, status: 'failure', details: apiResponse.error });
+        localStorage.removeItem('pvtelv_auth');
+        localStorage.removeItem('pvtelv_token');
+        localStorage.removeItem('pvtelv_welcomed');
+        return false; 
+      }
+      localStorage.removeItem('pvtelv_auth');
+      localStorage.removeItem('pvtelv_token');
+      localStorage.removeItem('pvtelv_welcomed'); 
+      
+      await this.logAuditEvent({
+        eventType: 'logout',
+        userId: userIdFromToken, 
+        status: 'success',
+      });
+      return true;
+    } catch (error) { 
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error during logout.';
+      // logAuditEvent is already called in the original code for this catch block.
+      // The console.error for network/unexpected errors is handled by api.ts's own catch block.
+      // So, the existing audit log here is sufficient for this specific error path.
+      await this.logAuditEvent({
+        eventType: 'logout_error', 
+        userId: userIdFromToken, 
+        status: 'failure',
+        details: errorMessage,
+      });
+      localStorage.removeItem('pvtelv_auth');
+      localStorage.removeItem('pvtelv_token');
+      localStorage.removeItem('pvtelv_welcomed');
       return false; 
     }
   }
@@ -263,22 +1019,21 @@ class AuthService {
   async revokeAllOtherSessions(): Promise<boolean> {
     const userIdFromToken = this.getUserIdFromToken();
     try {
-      // Backend should handle revoking all sessions for the authenticated user except the current one.
-      // The current session can be identified by the JWT token passed in the Authorization header.
-      const response = await api.post('/auth/revoke-all-sessions', {}); // No body needed, uses token
+      const response = await api.post('/auth/revoke-all-sessions', {}); 
       
-      if (response.data) { // Assuming backend confirms with a success message or data
+      if (response.data) { 
         await this.logAuditEvent({
           eventType: 'revoke_all_sessions',
-          userId: userIdFromToken, // TODO: Get from token
+          userId: userIdFromToken, 
           status: 'success',
         });
         return true;
       } else {
         const errorDetail = response.error || 'Failed to revoke other sessions.';
-         await this.logAuditEvent({
+        console.error(`AuthService.revokeAllOtherSessions Error: ${errorDetail}`, response); // Added console.error
+        await this.logAuditEvent({
           eventType: 'revoke_all_sessions_error',
-          userId: userIdFromToken, // TODO: Get from token
+          userId: userIdFromToken, 
           status: 'failure',
           details: errorDetail,
         });
