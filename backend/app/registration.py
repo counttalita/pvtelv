@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify # Removed import re
 
 registration_bp = Blueprint('registration', __name__)
 
@@ -14,8 +14,14 @@ from services.otp_service import generate_otp, hash_otp, can_request_otp, record
 def register():
     data = request.get_json()
     phone = data.get('phone')
+    # email = data.get('email') # Removed email extraction
+
     if not phone:
         return jsonify({'error': 'Phone number required'}), 400
+
+    # Email validation and uniqueness check (if email is provided)
+    # Removed email validation block
+    # Proceed with phone validation if email checks pass or email is not provided
     try:
         parsed = phonenumbers.parse(phone, None)
         if not phonenumbers.is_possible_number(parsed) or not phonenumbers.is_valid_number(parsed):
@@ -30,18 +36,28 @@ def register():
     existing = User.query.filter_by(phone=phone).first()
     if existing:
         return jsonify({'error': 'Phone number already registered'}), 400
-    else:
-        from services.fingerprint_service import get_device_fingerprint, get_ip_address, get_location_from_ip
-        user_agent = request.headers.get('User-Agent', '')
-        ip = get_ip_address(request)
-        location = get_location_from_ip(ip)
-        user = User(
-            phone=phone,
-            device_fingerprint=get_device_fingerprint(user_agent),
-            registration_ip=ip,
-            registration_location=str(location) if location else None
-        )
-        db.session.add(user)
+    
+    # Create user instance (conditionally include email)
+    from services.fingerprint_service import get_device_fingerprint, get_ip_address, get_location_from_ip
+    user_agent = request.headers.get('User-Agent', '')
+    ip = get_ip_address(request)
+    location = get_location_from_ip(ip)
+    
+    # Create user instance
+    from services.fingerprint_service import get_device_fingerprint, get_ip_address, get_location_from_ip
+    user_agent = request.headers.get('User-Agent', '')
+    ip = get_ip_address(request)
+    location = get_location_from_ip(ip)
+    
+    user = User(
+        phone=phone,
+        email=None, # Set email to None
+        device_fingerprint=get_device_fingerprint(user_agent),
+        registration_ip=ip,
+        registration_location=str(location) if location else None
+    )
+    db.session.add(user)
+    
     # Security: suspicious IP/device and CAPTCHA
     from services.security_service import track_registration, is_suspicious_ip, is_suspicious_device, should_show_captcha
     from app.audit import log_audit
@@ -55,8 +71,8 @@ def register():
         log_audit('registration', phone, ip, device_fingerprint, 'blocked', details='Suspicious IP or device')
         return jsonify({'error': 'Suspicious activity detected. Registration blocked.'}), 403
     if captcha_required:
-        log_audit('registration', phone, ip, device_fingerprint, 'captcha', details='CAPTCHA required')
-        return jsonify({'error': 'Please complete CAPTCHA to continue.'}), 403
+        log_audit('registration', phone, ip, device_fingerprint, 'captcha_threshold_reached', details='User met CAPTCHA threshold based on failed OTP attempts. No actual CAPTCHA presented (stub).')
+        # Registration continues, other security checks might still block.
     # OTP limiting and lockout
     from datetime import datetime, timedelta
     now = datetime.utcnow()

@@ -8,6 +8,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     phone = db.Column(db.String(20), unique=True, nullable=False)
     phone_verified = db.Column(db.Boolean, default=False)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+    email_verified = db.Column(db.Boolean, default=False, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     # OTP registration fields
     otp_hash = db.Column(db.String(64), nullable=True)

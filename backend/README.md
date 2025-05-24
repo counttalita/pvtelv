@@ -10,9 +10,9 @@ PVTElA is a secure, mobile-first digital wallet MVP designed to demonstrate robu
 ### Registration & Login
 - E.164 phone validation, disposable/VoIP check, carrier/region restrictions
 - Duplicate account prevention
-- OTP generation, hashing, expiry, and rate limiting
+- OTP generation, hashing, expiry, and rate limiting (OTP generation uses a mock Twilio service.)
 - Device and IP fingerprinting
-- Suspicious activity detection and CAPTCHA triggers
+- Suspicious activity detection and CAPTCHA threshold logging (full CAPTCHA implementation deferred).
 - Audit logging for all critical events
 
 ### KYC (Know Your Customer)
@@ -22,7 +22,7 @@ PVTElA is a secure, mobile-first digital wallet MVP designed to demonstrate robu
 
 ### Onboarding & Profile
 - Profile creation after KYC approval
-- Welcome notification (in-app, with hooks for email/SMS)
+- Welcome notification (in-app and SMS; email is not used for user notifications).
 - Intro tour and security setup steps
 - User preferences and onboarding completion tracking
 
@@ -35,6 +35,13 @@ PVTElA is a secure, mobile-first digital wallet MVP designed to demonstrate robu
 - Rate limiting for OTP and registration attempts
 - In-memory suspicious IP/device tracking (MVP)
 - Audit trail for all sensitive actions
+
+### Wallet Management
+- User wallet with real-time balance.
+- Comprehensive transaction history (deposits, withdrawals, fees).
+- Top-up via PayPal (15% fee applied, user pays gross, net amount credited).
+- Withdrawals to linked bank accounts (manual admin processing, 15% fee applied to amount withdrawn) and linked PayPal accounts (automated Payouts API, 15% fee applied to amount withdrawn).
+- Management of linked bank and PayPal accounts (max 2 per user).
 
 ---
 
@@ -76,6 +83,11 @@ PVTElA is a secure, mobile-first digital wallet MVP designed to demonstrate robu
 - `DATABASE_URL` - SQLAlchemy DB URI (default: SQLite)
 - `JWT_SECRET` - Secret for JWT encoding
 - `KYC_FROM_EMAIL`, `KYC_SMTP_SERVER`, `KYC_SMTP_PORT`, `KYC_SMTP_USER`, `KYC_SMTP_PASS` - For KYC email integration
+- `PAYPAL_MODE` - PayPal API mode ('sandbox' or 'live').
+- `PAYPAL_CLIENT_ID` - PayPal Client ID.
+- `PAYPAL_CLIENT_SECRET` - PayPal Client Secret.
+- `PAYPAL_WEBHOOK_ID` - PayPal Webhook ID for verifying incoming event notifications.
+- `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER` - Twilio credentials for SMS (currently, OTP service uses a MOCKED Twilio implementation).
 
 ---
 
@@ -85,10 +97,8 @@ PVTElA is a secure, mobile-first digital wallet MVP designed to demonstrate robu
 
 ---
 
-## MVP Status
-- Registration, login, onboarding, and KYC flows are complete and robust.
-- All tests are passing.
-- Next step: Wallet/account setup after onboarding.
+## Current Status
+- Core MVP features including registration, login, KYC, onboarding, and comprehensive wallet management (PayPal top-up, bank/PayPal withdrawals, fees, transaction history, linked accounts) are implemented and tested. The OTP service uses a MOCKED Twilio implementation. Full CAPTCHA implementation is deferred. Admin email notifications (e.g., for KYC, bank withdrawals) require configuration of an external email sending service.
 
 ---
 
