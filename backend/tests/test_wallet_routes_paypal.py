@@ -809,4 +809,4 @@ def test_get_wallet_transactions_invalid_pagination_params(client, test_user):
     assert response_exceed.status_code == 200
     json_data_exceed = response_exceed.get_json()
     assert json_data_exceed['per_page'] == 100
-```
+

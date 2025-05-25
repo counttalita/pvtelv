@@ -474,6 +474,9 @@ def get_wallet_transactions():
     }), 200
 
 
+
+  
+  
 # --- Withdrawal Endpoints ---
 
 @wallet_bp.route('/withdrawals/bank', methods=['POST'])
