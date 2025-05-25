@@ -19,14 +19,14 @@ def kyc_submit():
 @require_session
 def kyc_status():
     user_id = request.user['user_id']
-    status, sub = get_kyc_status(user_id)
-    resp = {'status': status}
-    if sub:
-        resp['submission_id'] = sub.id
-        resp['reviewed_at'] = sub.reviewed_at
-        resp['result'] = sub.result
-        resp['notes'] = sub.notes
-    return jsonify(resp), 200
+    status, sub = get_kyc_status(user_id) # get_kyc_status returns (status_string, submission_object_or_None)
+    
+    if sub: # KYCSubmission object exists
+        return jsonify(sub.to_dict()), 200
+    else: # No submission found
+        # The 'status' variable already contains the appropriate status string from the service
+        # (e.g., 'not_started' or 'no_submission')
+        return jsonify({'status': status, 'message': 'No KYC submission found.'}), 200
 
 @kyc_bp.route('/kyc/review', methods=['POST'])
 @require_session

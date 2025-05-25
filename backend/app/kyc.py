@@ -11,5 +11,15 @@ class KYCSubmission(db.Model):
     documents = db.Column(db.Text, nullable=True)  # JSON or comma-separated paths/urls
     notes = db.Column(db.Text, nullable=True)
 
-
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'status': self.status,
+            'submitted_at': self.submitted_at.isoformat() if self.submitted_at else None,
+            'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None,
+            'result': self.result,
+            'documents': self.documents, # Assuming documents is a simple string or JSON serializable
+            'notes': self.notes
+        }
 

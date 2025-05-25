@@ -30,6 +30,15 @@ class Wallet(db.Model):
     def __repr__(self):
         return f'<Wallet {self.user_id} - Balance: {self.balance}>'
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'balance': str(self.balance), # Convert Decimal to string for JSON
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
 class Transaction(db.Model):
     __tablename__ = 'transaction' # Explicitly define table name
 
@@ -53,6 +62,19 @@ class Transaction(db.Model):
 
     def __repr__(self):
         return f'<Transaction {self.id} - Type: {self.type} Amount: {self.amount} {self.currency} Status: {self.status}>'
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'wallet_id': self.wallet_id,
+            'type': self.type,
+            'amount': str(self.amount), # Convert Decimal to string for JSON
+            'currency': self.currency,
+            'status': self.status,
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+            'description': self.description,
+            'external_transaction_id': self.external_transaction_id
+        }
 
 class LinkedAccount(db.Model):
     __tablename__ = 'linked_account' # Explicitly set table name

@@ -416,6 +416,67 @@ def handle_delete_linked_account(account_id):
         return jsonify({"error": "An unexpected error occurred during deletion"}), 500
 
 
+# --- Wallet Details Endpoint ---
+
+@wallet_bp.route('/details', methods=['GET'])
+@login_required_placeholder
+def get_wallet_details():
+    user_id = get_current_user_id_placeholder()
+    wallet = Wallet.query.filter_by(user_id=user_id).first()
+
+    if not wallet:
+        return jsonify({'error': 'Wallet not found'}), 404
+
+    return jsonify(wallet.to_dict()), 200
+
+
+# --- Transaction History Endpoint ---
+
+@wallet_bp.route('/transactions', methods=['GET'])
+@login_required_placeholder
+def get_wallet_transactions():
+    user_id = get_current_user_id_placeholder()
+    wallet = Wallet.query.filter_by(user_id=user_id).first()
+
+    if not wallet:
+        return jsonify({'error': 'Wallet not found', 'transactions': []}), 404
+
+    try:
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+    except ValueError: # Handles if type=int fails for non-integer query params
+        return jsonify({'error': 'Invalid page or per_page parameter. Must be integers.'}), 400
+
+    # Ensure per_page is within reasonable limits
+    if per_page < 1:
+        per_page = 10
+    if per_page > 100: # Max limit
+        per_page = 100
+    if page < 1:
+        page = 1
+        
+    try:
+        pagination = Transaction.query.filter_by(wallet_id=wallet.id) \
+                                    .order_by(Transaction.timestamp.desc()) \
+                                    .paginate(page=page, per_page=per_page, error_out=False)
+    except Exception as e:
+        current_app.logger.error(f"Pagination error for user {user_id}, wallet {wallet.id}: {e}")
+        return jsonify({'error': 'Error during transaction pagination.'}), 500
+                                    
+    transactions_data = [tx.to_dict() for tx in pagination.items]
+
+    return jsonify({
+        'transactions': transactions_data,
+        'page': pagination.page,
+        'per_page': pagination.per_page,
+        'total_pages': pagination.pages,
+        'total_items': pagination.total
+    }), 200
+
+
+
+  
+  
 # --- Withdrawal Endpoints ---
 
 @wallet_bp.route('/withdrawals/bank', methods=['POST'])

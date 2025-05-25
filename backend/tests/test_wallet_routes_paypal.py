@@ -633,4 +633,180 @@ def test_withdraw_to_paypal_insufficient_balance(client, test_user):
 
     assert response_insufficient.status_code == 400
     assert response_insufficient.get_json()['error'] == 'Insufficient wallet balance.'
-```
+
+# --- Tests for GET /details ---
+
+def test_get_wallet_details_success(client, test_user):
+    from app.routes_wallet import get_wallet_details as endpoint_func # Import specific endpoint
+    _set_test_user_id(endpoint_func, test_user['id']) # Set user for placeholder auth
+
+    # Update wallet balance for a more specific test
+    with client.application.app_context():
+        wallet = Wallet.query.filter_by(user_id=test_user['id']).first()
+        assert wallet is not None
+        wallet.balance = Decimal('123.45')
+        db.session.commit()
+        
+        # Ensure created_at and updated_at are set for isoformat()
+        if not wallet.created_at: wallet.created_at = db.func.now()
+        if not wallet.updated_at: wallet.updated_at = db.func.now()
+        db.session.commit() # Commit again if timestamps were set
+
+    response = client.get(url_for('wallet_routes.get_wallet_details'))
+    
+    assert response.status_code == 200
+    json_data = response.get_json()
+    
+    assert json_data['user_id'] == test_user['id']
+    assert json_data['id'] == test_user['wallet_id']
+    assert json_data['balance'] == '123.45' # Balance should be a string
+    assert 'created_at' in json_data
+    assert 'updated_at' in json_data
+
+
+def test_get_wallet_details_no_wallet(client):
+    from app.routes_wallet import get_wallet_details as endpoint_func
+    
+    # Create a user who explicitly has no wallet for this test
+    no_wallet_user_id = 999
+    with client.application.app_context():
+        # Ensure no wallet exists for this user_id
+        existing_wallet = Wallet.query.filter_by(user_id=no_wallet_user_id).first()
+        if existing_wallet:
+            db.session.delete(existing_wallet)
+            db.session.commit()
+        
+        # Create user model if it's needed for auth placeholder, but not wallet
+        # For placeholder, just setting the ID is enough
+    
+    _set_test_user_id(endpoint_func, no_wallet_user_id)
+
+    response = client.get(url_for('wallet_routes.get_wallet_details'))
+    
+    assert response.status_code == 404
+    assert response.get_json()['error'] == 'Wallet not found'
+
+# Note: Testing unauthenticated access (401/403) depends heavily on the actual
+# authentication implementation. The current placeholder always "authenticates"
+# by setting a user_id. A real auth system would allow testing missing/invalid tokens.
+# For now, we assume @login_required_placeholder works and tests above cover authenticated states.
+
+# --- Tests for GET /transactions ---
+
+def test_get_wallet_transactions_success_with_pagination(client, test_user):
+    from app.routes_wallet import get_wallet_transactions as endpoint_func
+    from datetime import datetime, timedelta # For timestamp manipulation
+    _set_test_user_id(endpoint_func, test_user['id'])
+
+    wallet_id = test_user['wallet_id']
+    # Create some sample transactions
+    with client.application.app_context():
+        # Create more than `per_page` transactions to test pagination
+        for i in range(15):
+            tx = Transaction(
+                wallet_id=wallet_id,
+                type='deposit' if i % 2 == 0 else 'withdrawal',
+                amount=Decimal(str(10 + i)),
+                currency='ZAR',
+                status='completed',
+                description=f'Test transaction {i+1}',
+                timestamp=datetime.utcnow() - timedelta(hours=i) # Ensure different timestamps for ordering
+            )
+            db.session.add(tx)
+        db.session.commit()
+
+    # Test default pagination (page 1, per_page 10)
+    response_page1 = client.get(url_for('wallet_routes.get_wallet_transactions'))
+    assert response_page1.status_code == 200
+    json_data_p1 = response_page1.get_json()
+    
+    assert 'transactions' in json_data_p1
+    assert len(json_data_p1['transactions']) == 10
+    assert json_data_p1['page'] == 1
+    assert json_data_p1['per_page'] == 10
+    assert json_data_p1['total_pages'] == 2 # 15 items, 10 per page
+    assert json_data_p1['total_items'] == 15
+    # Verify descending order by timestamp (most recent first)
+    assert Decimal(json_data_p1['transactions'][0]['amount']) == Decimal('24.00') # Tx 15 (10 + 14)
+    assert Decimal(json_data_p1['transactions'][9]['amount']) == Decimal('15.00') # Tx 6 (10 + 5)
+
+    # Test specific page and per_page
+    response_page2 = client.get(url_for('wallet_routes.get_wallet_transactions', page=2, per_page=5))
+    assert response_page2.status_code == 200
+    json_data_p2 = response_page2.get_json()
+    
+    assert len(json_data_p2['transactions']) == 5
+    assert json_data_p2['page'] == 2
+    assert json_data_p2['per_page'] == 5
+    assert json_data_p2['total_pages'] == 3 # 15 items, 5 per page
+    assert json_data_p2['total_items'] == 15
+    # Verify content of one transaction
+    first_tx_page2 = json_data_p2['transactions'][0]
+    assert first_tx_page2['description'] == 'Test transaction 10' # (15 total - 5 on page 1 = 10th item is tx index 9)
+    assert Decimal(first_tx_page2['amount']) == Decimal('19.00') # 10 + 9
+
+    # Test requesting a page out of bounds (should return empty list for items)
+    response_page_oot = client.get(url_for('wallet_routes.get_wallet_transactions', page=99))
+    assert response_page_oot.status_code == 200
+    json_data_oot = response_page_oot.get_json()
+    assert len(json_data_oot['transactions']) == 0
+    assert json_data_oot['page'] == 99
+    assert json_data_oot['total_items'] == 15
+
+
+def test_get_wallet_transactions_no_transactions(client, test_user):
+    from app.routes_wallet import get_wallet_transactions as endpoint_func
+    _set_test_user_id(endpoint_func, test_user['id'])
+
+    # Ensure no transactions for this user (DB is clean from fixture for this user)
+    response = client.get(url_for('wallet_routes.get_wallet_transactions'))
+    assert response.status_code == 200
+    json_data = response.get_json()
+
+    assert len(json_data['transactions']) == 0
+    assert json_data['page'] == 1
+    assert json_data['per_page'] == 10
+    assert json_data['total_pages'] == 0
+    assert json_data['total_items'] == 0
+
+
+def test_get_wallet_transactions_no_wallet(client):
+    from app.routes_wallet import get_wallet_transactions as endpoint_func
+    no_wallet_user_id = 998 # Different from test_user's ID
+    
+    # Ensure this user does not have a wallet
+    with client.application.app_context():
+        Wallet.query.filter_by(user_id=no_wallet_user_id).delete()
+        db.session.commit()
+        
+    _set_test_user_id(endpoint_func, no_wallet_user_id)
+    
+    response = client.get(url_for('wallet_routes.get_wallet_transactions'))
+    assert response.status_code == 404
+    json_data = response.get_json()
+    assert json_data['error'] == 'Wallet not found'
+    assert json_data['transactions'] == []
+
+
+def test_get_wallet_transactions_invalid_pagination_params(client, test_user):
+    from app.routes_wallet import get_wallet_transactions as endpoint_func
+    _set_test_user_id(endpoint_func, test_user['id'])
+
+    response = client.get(url_for('wallet_routes.get_wallet_transactions', page="abc", per_page="xyz"))
+    assert response.status_code == 400 # As per route logic
+    json_data = response.get_json()
+    assert 'Invalid page or per_page parameter' in json_data['error']
+
+    # Test with negative page and per_page (should default to 1 and 10 respectively)
+    response_negative = client.get(url_for('wallet_routes.get_wallet_transactions', page="-1", per_page="-5"))
+    assert response_negative.status_code == 200
+    json_data_neg = response_negative.get_json()
+    assert json_data_neg['page'] == 1
+    assert json_data_neg['per_page'] == 10
+    
+    # Test with per_page exceeding max (should default to 100)
+    response_exceed = client.get(url_for('wallet_routes.get_wallet_transactions', per_page="200"))
+    assert response_exceed.status_code == 200
+    json_data_exceed = response_exceed.get_json()
+    assert json_data_exceed['per_page'] == 100
+

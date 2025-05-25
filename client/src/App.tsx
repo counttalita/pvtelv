@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import { authService } from "./services/auth";
+import ErrorBoundary from "./components/layout/ErrorBoundary"; // Added ErrorBoundary import
 
 const queryClient = new QueryClient();
 
@@ -30,9 +31,10 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
+      <ErrorBoundary fallbackMessage="Oops! The application encountered an error.">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
@@ -58,16 +60,11 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+    </ErrorBoundary>
     </TooltipProvider>
   </QueryClientProvider>
 );
 
-// For demonstration purposes - normally this would be handled by a proper auth system
-// This simulates login functionality for the MVP
-window.addEventListener('storage', (event) => {
-  if (event.key === 'pvtelv_auth' && event.newValue !== event.oldValue) {
-    window.location.reload();
-  }
-});
+// Removed localStorage event listener
 
 export default App;
